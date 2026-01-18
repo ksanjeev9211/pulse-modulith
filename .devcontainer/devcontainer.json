@@ -1,0 +1,22 @@
+{
+  "name": "pulse-modulith intellij java25",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "USERNAME": "dev",
+      "USER_UID": "1000",
+      "USER_GID": "1000"
+    }
+  },
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "remoteUser": "dev",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    "source=pulse-m2,target=/home/dev/.m2,type=volume"
+  ],
+  "containerEnv": {
+    "DOCKER_HOST": "unix:///var/run/docker.sock",
+    "MAVEN_OPTS": "-Dmaven.repo.local=/home/dev/.m2/repository"
+  },
+  "postCreateCommand": "docker version && mvn -v && java -version"
+}
