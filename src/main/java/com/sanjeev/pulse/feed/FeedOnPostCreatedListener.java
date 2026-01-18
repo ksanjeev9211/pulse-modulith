@@ -17,6 +17,6 @@ class FeedOnPostCreatedListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void on(PostCreatedEvent event) {
         if (feedRepository.existsById(event.postId())) return;
-        feedRepository.save(new FeedItem().setPostId(event.postId()).setAuthorId(event.authorId()).setCreatedAt(event.createdAt()));
+        feedRepository.save(new FeedItem(event.postId(), event.authorId(), event.createdAt()));
     }
 }
