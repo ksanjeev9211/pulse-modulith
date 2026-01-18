@@ -1,24 +1,25 @@
 package com.sanjeev.pulse.post.web;
 
 import com.sanjeev.pulse.post.PostService;
+import com.sanjeev.pulse.post.dto.ListPostsResponse;
 import com.sanjeev.pulse.post.dto.PostResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1/users/{userId}/posts")
+@RequiredArgsConstructor
 public class UserPostsController {
 
     private final PostService service;
 
-    public UserPostsController(PostService service) {
-        this.service = service;
-    }
-
     @GetMapping
-    public List<PostResponse> list(@PathVariable Long userId,
-                                   @RequestParam(defaultValue = "50") int limit) {
-        return service.listUserPosts(userId, limit);
+    public ListPostsResponse list(@PathVariable Long userId,
+                                  @RequestParam(defaultValue = "20") int limit,
+                                  @RequestParam(required = false) String cursor) {
+
+        return service.listUserPosts(userId, limit, cursor);
     }
 }

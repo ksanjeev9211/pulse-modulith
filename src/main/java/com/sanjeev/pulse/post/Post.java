@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
 @Entity
 @Table(name = "posts", indexes = {
-        @Index(name = "idx_posts_author_created", columnList = "authorId, createdAt")
+        @Index(name = "idx_posts_author_created_id", columnList = "authorId, createdAt, id")
 })
 @Getter
 @Setter
@@ -27,6 +28,7 @@ class Post {
     private String text;
 
     @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Instant createdAt;
 
 
