@@ -3,8 +3,9 @@ package com.sanjeev.pulse.feed.web;
 import java.time.Instant;
 
 public record FeedItemView(
-        long postId,
-        long authorId,
+        Long postId,
+        String text,
+        Long authorId,
         String authorName,
         Instant createdAt
 ) {}
