@@ -4,7 +4,7 @@ import com.sanjeev.pulse.feed.web.FeedPageResponse;
 import com.sanjeev.pulse.post.PostService;
 import com.sanjeev.pulse.post.dto.CreatePostRequest;
 import com.sanjeev.pulse.user.UserService;
-import com.sanjeev.pulse.user.dto.CreateUserRequest;
+import com.sanjeev.pulse.user.web.CreateUserRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;

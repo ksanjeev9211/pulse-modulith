@@ -1,8 +1,6 @@
 package com.sanjeev.pulse.user.web;
 
 import com.sanjeev.pulse.user.UserService;
-import com.sanjeev.pulse.user.dto.CreateUserRequest;
-import com.sanjeev.pulse.user.dto.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
