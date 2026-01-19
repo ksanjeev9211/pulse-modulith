@@ -19,6 +19,6 @@ class FeedController {
             @RequestParam(defaultValue = "20") int limit,
             @RequestParam(required = false) String cursor
     ) {
-        return service.list(userId, limit, cursor);
+        return service.listUserFeed(userId, limit, cursor);
     }
 }
