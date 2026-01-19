@@ -1,4 +1,4 @@
-package com.sanjeev.pulse.user.dto;
+package com.sanjeev.pulse.user.web;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

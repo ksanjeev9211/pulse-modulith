@@ -1,4 +1,4 @@
-package com.sanjeev.pulse.user.dto;
+package com.sanjeev.pulse.user.web;
 
 public record UserResponse(Long userId,
                            String handle,

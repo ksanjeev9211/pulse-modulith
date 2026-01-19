@@ -1,14 +1,11 @@
 package com.sanjeev.pulse.user;
 
-import com.sanjeev.pulse.user.dto.CreateUserRequest;
-import com.sanjeev.pulse.user.dto.UserResponse;
+import com.sanjeev.pulse.user.web.CreateUserRequest;
+import com.sanjeev.pulse.user.web.UserResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.sanjeev.pulse.post.PostService;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
