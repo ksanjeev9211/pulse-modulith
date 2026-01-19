@@ -1,10 +1,12 @@
 package com.sanjeev.pulse.post;
 
+import com.sanjeev.pulse.post.api.PostCreatedEvent;
 import com.sanjeev.pulse.post.dto.CreatePostRequest;
 import com.sanjeev.pulse.post.dto.ListPostsResponse;
 import com.sanjeev.pulse.post.dto.PostResponse;
 import com.sanjeev.pulse.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +21,23 @@ public class PostService {
     private final PostRepository repo;
     private final UserService userService;
 
+    private final ApplicationEventPublisher events;
+
 
     @Transactional
     public PostResponse create(CreatePostRequest req) {
         userService.requireUser(req.authorId()); // ensure author exists
+        var author = userService.getUser(req.authorId());
         Post saved = repo.save(new Post().setAuthorId(req.authorId()).setText(req.text().trim()));
+
+        var event = new PostCreatedEvent(
+                saved.getId(),
+                saved.getAuthorId(),
+                author.getDisplayName(),
+                saved.getCreatedAt()
+
+        );
+        events.publishEvent(event);
         return toResponse(saved);
     }
 
