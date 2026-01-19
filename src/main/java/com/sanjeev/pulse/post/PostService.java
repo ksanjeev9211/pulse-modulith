@@ -27,12 +27,15 @@ public class PostService {
     @Transactional
     public PostResponse create(CreatePostRequest req) {
         userService.requireUser(req.authorId()); // ensure author exists
+        var author = userService.getUser(req.authorId());
         Post saved = repo.save(new Post().setAuthorId(req.authorId()).setText(req.text().trim()));
 
         var event = new PostCreatedEvent(
                 saved.getId(),
                 saved.getAuthorId(),
+                author.getDisplayName(),
                 saved.getCreatedAt()
+
         );
         events.publishEvent(event);
         return toResponse(saved);

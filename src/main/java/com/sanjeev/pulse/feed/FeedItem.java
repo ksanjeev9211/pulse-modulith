@@ -20,7 +20,9 @@ class FeedItem {
     private Long postId;      // idempotency + simplicity
 
     private Long authorId;
+    private String authorName;
     private Instant createdAt;
+
 
 
 
