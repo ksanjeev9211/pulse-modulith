@@ -5,6 +5,7 @@ import com.sanjeev.pulse.post.PostService;
 import com.sanjeev.pulse.post.dto.CreatePostRequest;
 import com.sanjeev.pulse.user.UserService;
 import com.sanjeev.pulse.user.web.CreateUserRequest;
+import com.sanjeev.pulse.user.web.UserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
@@ -24,14 +25,14 @@ class FeedHydrationIT {
     @Test
     void hydratedFeedContainsText() {
         // Arrange: ensure user exists
-        userService.create(new CreateUserRequest("@ksanjeev9211", "sanjeev")); // adjust to your actual request type
+        UserResponse user = userService.create(new CreateUserRequest("@ksanjeev9211", "sanjeev"));
 
         // Arrange: create posts (publishes event -> feed item persisted)
-        postService.create(new CreatePostRequest(1L, "Event Test A"));
-        postService.create(new CreatePostRequest(1L, "Event Test B"));
+        postService.create(new CreatePostRequest(user.userId(), "Event Test A"));
+        postService.create(new CreatePostRequest(user.userId(), "Event Test B"));
 
         // Act
-        String url = "/v1/users/1/feed?limit=10";
+        String url = "/v1/users/" + user.userId() + "/feed?limit=10";
 
         FeedPageResponse resp = restTestClient.get()
                 .uri(url)

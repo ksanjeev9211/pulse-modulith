@@ -43,7 +43,7 @@ public class FeedQueryService {
         // --- Hydration step (book-aligned) ---
         // 1) get post IDs from feed store
         List<Long> postIds = feedItems.stream()
-                .map(FeedItem::getPostId)
+                .map(feedItem -> feedItem.getId().getPostId())
                 .toList();
 
         // 2) fetch post objects from post service (via post :: api)
@@ -56,14 +56,14 @@ public class FeedQueryService {
         // 4) compose final hydrated response items in feed order
         List<FeedItemView> items = new ArrayList<>(feedItems.size());
         for (FeedItem feed : feedItems) {
-            PostView post = postById.get(feed.getPostId());
+            PostView post = postById.get(feed.getId().getPostId());
 
             // If a post is missing (deleted, inconsistent, etc.), skip for now.
             // (We’ll handle data consistency strategies later when the book introduces them.)
             if (post == null) continue;
 
             items.add(new FeedItemView(
-                    feed.getPostId(),
+                    feed.getId().getPostId(),
                     post.text(),
                     feed.getAuthorId(),
                     feed.getAuthorName(),
@@ -91,7 +91,7 @@ public class FeedQueryService {
         }
 
         static String of(FeedItem item) {
-            return item.getCreatedAt().toEpochMilli() + "_" + item.getPostId();
+            return item.getCreatedAt().toEpochMilli() + "_" + item.getId().getPostId();
         }
     }
 }

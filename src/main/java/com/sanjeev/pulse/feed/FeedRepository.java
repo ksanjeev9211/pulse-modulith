@@ -7,21 +7,21 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.Instant;
 import java.util.List;
 
-interface FeedRepository extends JpaRepository<FeedItem, Long> {
+interface FeedRepository extends JpaRepository<FeedItem, FeedItemId> {
 
     @Query("""
         select f from FeedItem f
-        where f.authorId = :userId
-        order by f.createdAt desc, f.postId desc
+        where f.id.userId = :userId
+        order by f.createdAt desc, f.id.postId desc
     """)
     List<FeedItem> firstPage(Long userId, Pageable pageable);
 
     @Query("""
         select f from FeedItem f
-        where f.authorId = :userId
+        where f.id.userId = :userId
           and (f.createdAt < :createdAt
-               or (f.createdAt = :createdAt and f.postId < :postId))
-        order by f.createdAt desc, f.postId desc
+               or (f.createdAt = :createdAt and f.id.postId < :postId))
+        order by f.createdAt desc, f.id.postId desc
     """)
     List<FeedItem> pageAfter(
             Long userId,
@@ -29,4 +29,6 @@ interface FeedRepository extends JpaRepository<FeedItem, Long> {
             Long postId,
             Pageable pageable
     );
+
+    boolean existsByIdUserIdAndIdPostId(Long userId, Long postId);
 }
