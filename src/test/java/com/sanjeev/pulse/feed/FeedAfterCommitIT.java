@@ -2,6 +2,8 @@ package com.sanjeev.pulse.feed;
 
 import com.sanjeev.pulse.post.PostService;
 import com.sanjeev.pulse.post.dto.CreatePostRequest;
+import com.sanjeev.pulse.user.UserService;
+import com.sanjeev.pulse.user.web.CreateUserRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,21 +31,24 @@ class FeedAfterCommitIT {
     @TestConfiguration
     static class Config {
         @Bean
-        FailingFacade failingFacade(PostService postService) {
-            return new FailingFacade(postService);
+        FailingFacade failingFacade(UserService userService, PostService postService) {
+            return new FailingFacade(userService, postService);
         }
     }
 
     static class FailingFacade {
+        private final UserService userService;
         private final PostService postService;
 
-        FailingFacade(PostService postService) {
+        FailingFacade(UserService userService, PostService postService) {
+            this.userService = userService;
             this.postService = postService;
         }
 
         @Transactional
         public void createThenFail() {
-            postService.create(new CreatePostRequest(1L, "boom"));
+            Long authorId = userService.create(new CreateUserRequest("rollbacks", "Roll Back")).userId();
+            postService.create(new CreatePostRequest(authorId, "boom"));
             throw new RuntimeException("force rollback");
         }
     }
