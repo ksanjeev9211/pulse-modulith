@@ -109,6 +109,19 @@ This file keeps the project honest:
 
 ---
 
+### Milestone 07 — Async Fanout (in-process)
+- **Docs:** `docs/tracks/feed/07-async-fanout-in-process.md`
+- **Branch:** (tbd)
+- **What we built:**
+  - Optional async fanout listener (off-thread) behind `pulse.feed.fanout.async=true`
+  - Shared fanout logic factored into a small service to keep behavior consistent
+- **Book concepts:**
+  - Decoupling expensive side effects from the request path
+  - Eventual consistency as a tradeoff
+  - Adding complexity only after pain is measurable
+
+---
+
 ## Track: Infrastructure Concepts (book TOC-driven)
 
 These are **book chapter topics** that will be introduced only when the implementation hits real pressure.
