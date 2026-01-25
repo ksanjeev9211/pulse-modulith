@@ -3,6 +3,7 @@ package com.sanjeev.pulse.feed;
 import com.sanjeev.pulse.feed.web.FeedPageResponse;
 import com.sanjeev.pulse.follow.web.FollowRequest;
 import com.sanjeev.pulse.post.dto.CreatePostRequest;
+import com.sanjeev.pulse.post.dto.PostResponse;
 import com.sanjeev.pulse.user.web.CreateUserRequest;
 import com.sanjeev.pulse.user.web.UserResponse;
 import org.junit.jupiter.api.Test;
@@ -36,10 +37,13 @@ class FanoutOnWriteIT {
         follow(userC.userId(), userA.userId());
 
         // Act: A creates a post (this should fan out AFTER_COMMIT into B and C feeds)
-        createPost(userA.userId(), "Hello from A");
+        PostResponse post = createPost(userA.userId(), "Hello from A");
+        assertThat(post).isNotNull();
 
-        // Assert: write amplification is visible (B, C, and A all get an entry)
-        assertThat(feedRepository.count()).isEqualTo(3);
+        // Assert: idempotent fanout projection exists per viewer (avoid global count; other tests may write feed rows)
+        assertThat(feedRepository.existsByIdUserIdAndIdPostId(userA.userId(), post.postId())).isTrue();
+        assertThat(feedRepository.existsByIdUserIdAndIdPostId(userB.userId(), post.postId())).isTrue();
+        assertThat(feedRepository.existsByIdUserIdAndIdPostId(userC.userId(), post.postId())).isTrue();
 
         // Assert: B feed contains A's post
         FeedPageResponse feedB = fetchFeed(userB.userId());
@@ -87,13 +91,16 @@ class FanoutOnWriteIT {
                 .expectStatus().isOk();
     }
 
-    private void createPost(Long authorId, String text) {
-        client.post()
+    private PostResponse createPost(Long authorId, String text) {
+        return client.post()
                 .uri("/v1/posts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new CreatePostRequest(authorId, text))
                 .exchange()
-                .expectStatus().isCreated();
+                .expectStatus().isCreated()
+                .expectBody(PostResponse.class)
+                .returnResult()
+                .getResponseBody();
     }
 
     private FeedPageResponse fetchFeed(Long userId) {
