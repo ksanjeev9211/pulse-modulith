@@ -96,6 +96,19 @@ This file keeps the project honest:
 
 ---
 
+### Milestone 06 — Fanout Pressure (make the pain visible)
+- **Docs:** `docs/tracks/feed/06-fanout-pressure.md`
+- **Branch:** `main`
+- **What we built:**
+  - Stabilized fanout integration assertions (avoid global DB counts)
+  - Disabled pressure harness test that simulates 1k followers and times `POST /v1/posts`
+- **Book concepts:**
+  - Throughput coupling to graph shape
+  - Celebrity problem as a forced design pressure
+  - "Why now?" before introducing async/batching/hybrids
+
+---
+
 ## Track: Infrastructure Concepts (book TOC-driven)
 
 These are **book chapter topics** that will be introduced only when the implementation hits real pressure.
